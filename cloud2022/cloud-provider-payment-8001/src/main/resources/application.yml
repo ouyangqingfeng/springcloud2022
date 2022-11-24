@@ -1,0 +1,46 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: cloud-payment-service
+  zipkin:
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      #采样率值介于0~1之间，1表示全部采样
+      probability: 1
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://oyqf.ltd:7001/springcloudtest1
+    username: sky
+    password: 123456
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: ltd.oyqf.entitles
+eureka:
+  client:
+    register-with-eureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+      #设置Feign客户端超时时间（openfeign默认支持ribbon）
+      ribbon:
+        ReadTimeout: 3000
+        ConnectTimeout: 3000
+        MaxAutoRetries: 1 #同一台实例最大重试次数,不包括首次调用
+        MaxAutoRetriesNextServer: 1 #重试负载均衡其他的实例最大重试次数,不包括首次调用
+        OkToRetryOnAllOperations: false #非Get请求是否重试
+      #hystrix的超时时间
+      hystrix:
+        command:
+          default:
+            execution:
+              timeout:
+                enabled: true
+              isolation:
+                thread:
+                  timeoutInMilliseconds: 9000
+
+
